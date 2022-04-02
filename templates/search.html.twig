@@ -1,0 +1,101 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}Search{% endblock %}
+
+{% block body %}
+
+<div class="container mb-5 mt-5">
+	    <div class="row justify-content-md-center">
+		
+            <div class="col-md-auto">
+			{% if how_many_post != "0" %}
+    		{% for post in posts %}
+				<div class="card mb-5" style="width: 36rem;">                               
+					<div class="card-header p-3">
+                        <div class="d-flex">
+							<a href="/profile/{{post.login}}">
+                            <span class="font-weight-bold" style="color: black">{{post.login}}</span>
+							</a>
+                        </div>
+                    </div>					
+                    <div class="card-body p-0">					
+                        <div class="embed-responsive embed-responsive-1by1">
+                            <img class="embed-responsive-item" style="object-fit: cover;" src={{post.imgSource}} />
+                        </div>
+                        <div class="d-flex flex-row justify-content-between p-3">	
+						<div>
+							<div>
+								{% if post.isSold == 0 %}
+                                    <strong style="color: #96009e">Aktualne</strong>
+                                {% else %}
+                                    <strong style="color: #96009e">Nieaktualne</strong>
+                                {% endif %}
+							</div>
+							<strong style="font-size:120%">{{post.title}}</strong>
+							</div>
+                             <span class="font-weight-bold" style="color: black; font-size: 150%"> {{post.price}} zł</span>
+                        </div>
+						<div class="d-flex flex-column pb-3 pl-3">		
+							<p>{{post.description}}</p>				
+							<strong class="d-block">{{post.localization}}</strong>							
+						</div>
+                        <div class="d-flex flex-column pb-3 pl-3">		
+                            <strong class="d-block" style="color: #9932CC">{{post.name.categoryName}}</strong>									
+						</div>				
+                    </div>
+                </div>	
+    		{% endfor %}
+			{% else %}
+			<strong style="font-size: 120%">Nie ma ogłoszeń z podanej kategorii!</strong>
+			{% endif %}
+            </div>
+			
+
+            <div class="col-md-4">
+				<div class="card fixed">
+					<div class="card-header p-3">
+                        {% if session.id is defined %}
+                            <strong>Jesteś zalogowany</strong>
+                        {% else %}
+                            <strong>Masz już konto?</strong>
+                        {% endif %}
+					</div>
+					<div class="card-body">
+                        {% if session.id is defined %}
+                            <strong style="color: #761b7a">{{session.login}}</strong><br>
+							<span class="pr-1">Liczba dodanych ogłoszeń: </span>
+							<span>{{ile_photos}}</span><br>
+							<span class="pr-1">Ostatnie ogłoszenie: </span>
+
+                            {% if ile_photos  == 0 %}
+				                <span>-</span><br>
+			                {% else %}
+				                <span>{{last_post.createdTime}}</span><br>
+			                {% endif %}
+                            <div class="mb-2">
+							<form action="" method="POST" class="form-inline my-2 my-lg-0">
+								<button type="submit" name="logout" class="btn btn-outline-secondary mt-3" value="true">Wyloguj</button>
+							</form>
+                            </div>
+                            <p>{{ test }}</p>
+                        {% else %}					
+                        <form action="" method="POST" class="form-group my-2 my-lg-0 col-12">
+						    <div class="mb-2">
+						        <input type="text" name="login" class="form-control" placeholder="Login" aria-label="login">
+						    </div>
+						    <div class="mb-3">
+						        <input type="password" name="password" class="form-control" placeholder="Hasło" aria-label="password">
+						    </div>
+						    <div class="mb-2">
+							    <button class="btn btn-outline-primary" type="submit">Zaloguj się</button>
+						    </div>
+                            <p>{{ test }}</p>
+					    </form>
+                        {% endif %}
+					</div>
+				</div>
+            </div>
+		</div>
+	</div>
+
+{% endblock %}

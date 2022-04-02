@@ -1,0 +1,30 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}Messages{% endblock %}
+
+{% block body %}
+
+<div class="container">
+	<div class="row">
+		<div class="col-6 mx-auto my-5">
+		    <div class="card">
+	            <div class="card-header">
+                    Wiadomości
+                </div>
+                <div class="list-group">
+                    {% for conversation in conversations %}
+                        <a href="/conversation.php?post={{conversation.idPost}}&person={{conversation.buyer}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{conversation.postTitle}}</h5>
+                                <small>{{conversation.lastMsg}}</small>
+                            </div>
+                            <p class="mb-1">{{conversation.otherUserName}}</p>
+                        </a>
+                    {% endfor %}
+                </div>
+		    </div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

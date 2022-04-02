@@ -1,0 +1,70 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+
+    <section class="pt-5 pb-3 text-center container mb-3">
+    <div class="row pb-lg-5">
+      <div class="col-lg-8 col-md-8 mx-auto">
+        <h3 class="fw-light">{{user.login}}</h3>
+		<div class="d-flex justify-content-center">
+			<p class="lead mr-3 my-2">Liczba postów: </p>
+			<p class="lead text-muted mr-5 my-2">{{how_many_photos}}</p>
+			<p class="lead mr-3 my-2">Data dodania ostatniego posta: </p>
+			{% if how_many_photos  == 0 %}
+				<p class="lead text-muted mr-3 my-2">-</p>
+			{% else %}
+				<p class="lead text-muted mr-3 my-2">{{last_post.createdTime}}</p>
+			{% endif %}
+		</div>
+      </div>
+    </div>
+  </section>
+  
+	<section class="container">
+		<div class="row justify-content-md-around mb-5">
+
+			<div class="col-2 mb-5">
+				<img src="{{post.imgSource}}"  class="card shadow-sm " style="height: 30rem; width: 30rem; object-fit: cover;">
+			</div>
+			
+			<div class="col-auto">
+				<div class="d-flex flex-column mb-3" style="width: 17rem;">
+
+					<div class="d-flex justify-content-between align-items-center mb-3">
+						<span class="mx-1" style="color: black; font-size: 150%" >{{post.price}} zł</span>
+						{% if owner == "true" %}
+						<form action= "/post.php?delete={{post.idPost}}" enctype="multipart/form-data" method="POST">
+						<button type="submit" name="delete" class="btn btn-outline-primary">X</button>
+						</form>
+						{% endif %}					
+						</div>
+					</div>
+					
+						{% if post.isSold == 0 %}
+                            <strong style="color: #96009e">Aktualne</strong>
+                        {% else %}
+                            <strong style="color: #96009e">Nieaktualne</strong>
+                        {% endif %}
+					<strong class="d-block" style="font-size:120%">{{post.title}}</strong>
+					<p>{{post.description}}</p>
+					<strong class="d-block">{{post.localization}}</strong>	
+					<strong class="d-block" style="color: #9932CC">{{post.categoryName}}</strong>							
+					<form action= "/post.php?message={{post.idPost}}" enctype="multipart/form-data" method="POST">
+					<div class="d-flex flex-row mt-2 mb-5">
+						<div>
+							<input class="form-control" type="text" name="message" placeholder="Wyślij wiadomość">
+						</div>
+						<div class="pl-3">
+							<button type="submit" name="" class="btn btn-outline-primary">Dodaj</button>
+						</div>
+					</div>
+					</form>
+					<p>{{info}}</p>
+				</div>
+			</div>
+		</div>
+    </section>
+
+{% endblock %}

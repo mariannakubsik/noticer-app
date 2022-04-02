@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+	<title>{% block title %}Noticer{% endblock %}</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" type="image/png" sizes="16x16"  href="favicon-16x16.png">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <style>
+		html {
+            position: relative;
+            min-height: 100%;
+        }
+        body {
+            margin-bottom: 60px;
+            padding-top: 5rem;
+        }
+        .footer {
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          height: 60px;
+          line-height: 60px;
+          background-color: #f5f5f5;
+        }
+        .navbar-light .navbar-brand {
+            color: purple;
+        }
+        
+        .navbar-light {
+            background: rgb(82,190,209, 0.3) !important;
+        }
+        
+        .nav-link {
+            color: #96009e;
+        }
+
+        .search {
+            background: rgb(251,246,255, 0.7);
+        }
+
+        .fixed{
+            position: fixed;
+            width: 23%;
+        }
+        
+        .btn-outline-primary{
+            color: #aa61c2;
+            border-color: #aa61c2;
+        }
+        .btn-outline-primary:hover, 
+        .btn-outline-primary:focus,
+        .btn-outline-primary:active {
+            background: rgb(216,166,245, 0.7) !important;
+            color: #FFF;
+            border-color: #bb90d1 !important;
+        }
+        .btn-outline-primary:active,
+        .btn-outline-primary:focus    {
+            box-shadow: 0 0 10px #bb90d1 !important;
+        }
+                
+        .form-control:focus {
+            border-color: #cfc1d6;
+            box-shadow: inset 0 0 2px #cfc1d6, 0 0 5px #cfc1d6;
+        }
+        
+        .btn-outline-secondary{
+            color: #bb90d1;
+            border-color: #bb90d1;
+        }
+        .btn-outline-secondary:hover, 
+        .btn-outline-secondary:focus,
+        .btn-outline-secondary:active {
+            background: rgb(216,166,245, 0.7) !important;
+            color: #FFF;
+            border-color: #cfc1d6 !important;
+        }
+        .btn-outline-secondary:active,
+        .btn-outline-secondary:focus    {
+            box-shadow: 0 0 10px #cfc1d6 !important;
+        }
+        
+        .add-photo {
+            color: #bb90d1;
+        }
+        
+        .heart-shadow:focus {
+            box-shadow: inset 0 0 2px #cfc1d6, 0 0 5px #cfc1d6;
+        }
+        .photo-shadow:focus {
+            box-shadow: inset 0 0 2px #bb90d1, 0 0 10px #bb90d1;
+        }
+
+        {# * {
+            font-family: 'Georgia';
+        } #}
+        .scroll{
+            height: 500px;
+            overflow: auto;  
+        }
+        .bubbleWrapper {
+	        padding: 10px 10px;
+	        display: flex;
+	        justify-content: flex-end;
+	        flex-direction: column;
+	        align-self: flex-end;
+            color: #fff;
+        }
+        .inlineContainer {
+            display: inline-flex;
+        }
+        .inlineContainer.own {
+            flex-direction: row-reverse;
+        }
+        .inlineIcon {
+            width:20px;
+            object-fit: contain;
+        }
+        .ownBubble {
+            min-width: 60px;
+            max-width: 700px;
+            padding: 14px 18px;
+            margin: 6px 8px;
+            background-color: #5b5377;
+            border-radius: 16px 16px 0 16px;
+            border: 1px solid #443f56;
+        }
+        .otherBubble {
+            min-width: 60px;
+            max-width: 700px;
+            padding: 14px 18px;
+            margin: 6px 8px;
+            background-color: #6C8EA4;
+            border-radius: 16px 16px 16px 0;
+            border: 1px solid #54788e;
+        }
+        .own {
+            align-self: flex-end;
+        }
+        .other {
+            align-self: flex-start;
+        }
+        span.own,
+        span.other{
+            font-size: 14px;
+            color: grey;
+        }
+    </style>
+</head>
+
+<body>
+
+
+	<div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <div class="container justify-content-center">
+				<a class="navbar-brand" href="/main">Noticer</a>
+                <div class="d-flex flex-row-reverse justify-content-between align-items-center col-10">
+
+                    <div class="d-flex flex-row">
+                        <ul class="list-inline m-0">
+
+                            <li class="list-inline-item">
+                                <form action="/search.php" method="GET" class="form-inline">
+							        <select class="form-control" type="text" name="category" id= "slct1" placeholder="Kategoria">
+							            {% for name in categoriesNames %}
+							 	            <option value="{{name.categoryName}}">{{name.categoryName}}</option>
+							            {% endfor %}
+							        </select>
+                                    <button type="submit" name="submit" class="btn btn-outline-primary mx-3">Wyszukaj kategorię</button>
+                                </form>
+                           </li>
+
+						   	{% if session.id is defined %}
+                            <li class="list-inline-item ml-2">
+                                <a class="nav-link" href="/message">Wiadomości</a>
+                            </li>                               
+                            <li class="list-inline-item ml-2">
+                                <a class="nav-link" href="/add">Dodaj ogłoszenie</a>
+                            </li>
+                            <li class="list-inline-item ml-2">
+                                <a class="nav-link" href="/profile/{{session.login}}">Twój Profil</a>
+                            </li>                            	
+                        	{% else %}
+                            <li class="list-inline-item">
+                                <a class="nav-link" href="/register">Rejestracja</a>
+                            </li>                            	
+                        	{% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+{% block body %}
+    <div class="container mb-5 mt-5">
+	    <div class="row justify-content-md-center">
+		
+            <div class="col-md-auto">
+
+    		{% for post in posts %}
+				<div class="card mb-5" style="width: 36rem; ">                               
+					<div class="card-header p-3">
+					{% if session.id is defined %}
+                        <div class="d-flex">
+							<a href="/profile/{{post.login}}">
+                            <span class="font-weight-bold" style="color: black">{{post.login}}</span>
+							</a>
+                        </div>
+					{% else %}
+						<div class="d-flex">
+                            <span class="font-weight-bold">{{post.login}}</span>
+                        </div>
+					{% endif %}
+                    </div>					
+                    <div class="card-body p-0">					
+                        <div class="embed-responsive embed-responsive-1by1">
+                            <img class="embed-responsive-item" style="object-fit: cover;" src={{post.imgSource}} />
+                        </div>
+                        <div class="d-flex flex-row justify-content-between p-3">
+							<div>
+								<div>
+                                {% if post.isSold == 0 %}
+                                    <strong style="color: #96009e">Aktualne</strong>
+                                {% else %}
+                                    <strong style="color: #96009e">Nieaktualne</strong>
+                                {% endif %}
+								</div>
+							<strong style="font-size:120%">{{post.title}}</strong>
+							</div>
+                             <span class="font-weight-bold" style="color: black; font-size: 150%"> {{post.price}} zł</span>
+                        </div>
+						<div class="d-flex flex-column pb-3 pl-3">		
+							<p>{{post.description}}</p>				
+							<strong class="d-block">{{post.localization}}</strong>							
+						</div>
+                        <div class="d-flex flex-column pb-3 pl-3">		
+                            <strong class="d-block" style="color: #9932CC">{{post.name.categoryName}}</strong>									
+						</div>
+                        {% if session.id is defined %}
+                            <form action= "/index.php?message={{post.idPost}}" enctype="multipart/form-data" method="POST">
+						    <div class="d-flex flex-row mr-3 mb-3">
+							    <div class="col-10">
+								    <input class="form-control" type="text" name="message" placeholder="Wyślij wiadomość do {{post.login}}">
+							    </div>
+							    <div class="col-2 pl-3">
+								    <button type="submit" name="" class="btn btn-outline-primary">Dodaj</button>
+                                    <div>{{info}}</div>
+							    </div>
+						    </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>	
+    		{% endfor %}
+            </div>
+			
+			
+            <div class="col-md-4">
+				<div class="card fixed">
+					<div class="card-header p-3">
+                        {% if session.id is defined %}
+                            <strong>Jesteś zalogowany</strong>
+                        {% else %}
+                            <strong>Masz już konto?</strong>
+                        {% endif %}
+					</div>
+					<div class="card-body">
+                        {% if session.id is defined %}
+                            <strong style="color: #761b7a;">{{session.login}}</strong><br>
+							<span class="pr-1">Liczba dodanych ogłoszeń: </span>
+							<span>{{ile_photos}}</span><br>
+							<span class="pr-1">Ostatnie ogłoszenie: </span>
+
+                            {% if ile_photos  == 0 %}
+				                <span>-</span><br>
+			                {% else %}
+				                <span>{{last_post.createdTime}}</span><br>
+			                {% endif %}
+                            <div class="mb-2">
+							<form action="" method="POST" class="form-inline my-2 my-lg-0">
+								<button type="submit" name="logout" class="btn btn-outline-secondary mt-3" value="true">Wyloguj</button>
+							</form>
+                            </div>
+                            <p>{{ test }}</p>
+                        {% else %}					
+                        <form action="" method="POST" class="form-group my-2 my-lg-0 col-12">
+						    <div class="mb-2">
+						        <input type="text" name="login" class="form-control" placeholder="Login" aria-label="login">
+						    </div>
+						    <div class="mb-3">
+						        <input type="password" name="password" class="form-control" placeholder="Hasło" aria-label="password">
+						    </div>
+						    <div class="mb-2">
+							    <button class="btn btn-outline-primary" type="submit">Zaloguj się</button>
+						    </div>
+                            <p>{{ test }}</p>
+					    </form>
+                        {% endif %}
+					</div>
+				</div>
+            </div>
+		</div>
+	</div>
+	{% endblock %}
+
+</body>
+
+        <footer class="footer mt-auto">
+          <div class="container">
+			<div class="row justify-content-between">
+				<span style="color: #cfc1d6">Aktualna data: {{data}}</span>
+				<div>
+					<span style="color: #cfc1d6">© 2022 Copyright: </span>
+					<span style="color: #bb90d1">Noticer</span>
+				</div>
+				<span style="color: #cfc1d6">Ania Janowska, Marianna Kubsik</span>
+			</div>
+          </div>
+        </footer>
+
+</html>
